@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YUNKO | المتجر ولوحة التحكم</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f5f7fa;color:#172033}
+header{background:#101828;color:#fff;padding:14px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.logo{font-size:25px;font-weight:900;color:#d39a42}.nav button,.btn{border:0;padding:11px 17px;border-radius:10px;font-weight:700;cursor:pointer}.nav button{background:#fff;color:#172033;margin-right:6px}
+.hero{background:linear-gradient(135deg,#172033,#34435c);color:#fff;padding:55px 5%}.hero h1{font-size:38px;margin:0 0 12px}.hero p{line-height:1.9;color:#e5e7eb}
+.wrap{max-width:1100px;margin:auto;padding:30px 18px}.title{text-align:center;margin:15px 0 30px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:#fff;border:1px solid #e7eaf0;border-radius:16px;overflow:hidden;box-shadow:0 5px 20px #1018280d}.pic{height:190px;background:#e9edf2;display:flex;align-items:center;justify-content:center;font-size:65px}.body{padding:18px}.price{font-size:20px;color:#b7791f;font-weight:800;margin:12px 0}.muted{color:#667085;line-height:1.8;font-size:14px}
+.btn{background:#b7791f;color:#fff}.green{background:#25d366}.danger{background:#d92d20}.dark{background:#344054}.hidden{display:none!important}
+#admin{background:#fff;min-height:calc(100vh - 60px)}.panel{max-width:1000px;margin:auto;padding:25px 18px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.tabs button{padding:12px 16px;border:1px solid #d0d5dd;background:#fff;border-radius:10px;cursor:pointer}.tabs button.active{background:#172033;color:#fff}
+.form{display:grid;gap:13px;background:#f8fafc;border:1px solid #e4e7ec;border-radius:16px;padding:20px}.form input,.form textarea,.form select{width:100%;padding:13px;border:1px solid #d0d5dd;border-radius:9px;font:inherit}.form textarea{min-height:100px;resize:vertical}
+.admin-list{display:grid;gap:12px;margin-top:20px}.admin-item{background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:14px;display:flex;justify-content:space-between;gap:12px;align-items:center}.actions{display:flex;gap:7px;flex-wrap:wrap}
+.note{background:#fff7e6;border:1px solid #f2c46d;padding:12px;border-radius:10px;line-height:1.8}
+footer{background:#101828;color:#cbd5e1;text-align:center;padding:22px}
+@media(max-width:750px){.grid{grid-template-columns:1fr}.hero h1{font-size:29px}.admin-item{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">YUNKO</div>
+<div class="nav">
+<button onclick="showStore()">المتجر</button>
+<button onclick="showAdmin()">لوحة التحكم</button><button onclick="showAuctions()">الحراج والمزادات</button>
+</div>
+</header>
+
+<main id="store">
+<section class="hero"><div style="max-width:1000px;margin:auto">
+<h1>YUNKO — سوقك الإلكتروني</h1>
+<p>اعرض الملابس والسيارات والمنتجات والخدمات في مكان واحد، وتواصل مباشرة مع العملاء عبر واتساب.</p>
+<a class="btn green" href="https://wa.me/967771204253" target="_blank">واتساب: 771204253</a>
+</div></section>
+<div class="wrap"><div class="title"><h2>المنتجات المعروضة</h2><p class="muted">يمكنك إدارة هذه المنتجات من لوحة التحكم.</p></div>
+<div class="grid" id="storeGrid"></div></div>
+</main>
+
+
+<main id="auctions" class="hidden">
+<section class="hero"><div style="max-width:1000px;margin:auto">
+<h1>حراج ومزادات YUNKO</h1><p>إعلانات الحراج والمزادات المتاحة للعملاء.</p>
+</div></section>
+<div class="wrap"><div class="title"><h2>الإعلانات الحالية</h2></div>
+<div class="grid" id="auctionGrid"></div></div>
+</main>
+
+<main id="admin" class="hidden">
+<div class="panel">
+<h1>لوحة تحكم YUNKO</h1>
+<div class="note">هذه اللوحة تعمل من داخل الملف على جهازك. البيانات تُحفظ في المتصفح باستخدام التخزين المحلي. لعرض التغييرات على أجهزة العملاء عبر الإنترنت، ستحتاج لاحقًا إلى ربط الموقع بقاعدة بيانات واستضافة.</div>
+<div class="tabs"><button class="active" onclick="adminTab('products',this)">المنتجات</button><button onclick="adminTab('auctions',this)">الحراج والمزادات</button><button onclick="adminTab('settings',this)">الإعدادات</button></div>
+<section id="productsTab">
+<h2>إضافة منتج</h2>
+<div class="form">
+<input id="pName" placeholder="اسم المنتج">
+<select id="pCat"><option>الملابس</option><option>السيارات</option><option>منتجات متنوعة</option></select>
+<input id="pPrice" placeholder="السعر، مثال: 50,000 ريال">
+<input id="pIcon" placeholder="رمز/إيموجي المنتج، مثال: 🚘">
+<label>صورة المنتج من معرض الهاتف (اختياري)</label>
+<input id="pImageFile" type="file" accept="image/*" onchange="previewProductImage(this)">
+<input id="pImage" type="hidden">
+<div id="pImagePreview" style="display:none;margin-top:5px"><img id="pPreviewImg" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px"></div>
+<textarea id="pDesc" placeholder="وصف المنتج والمواصفات"></textarea>
+<button class="btn" onclick="addProduct()">➕ إضافة المنتج</button>
+</div>
+<h2>المنتجات الحالية</h2><div class="admin-list" id="adminList"></div>
+</section>
+
+<section id="auctionsTab" class="hidden">
+<h2>إنشاء إعلان حراج أو مزاد</h2>
+<div class="form">
+<input id="aTitle" placeholder="عنوان الإعلان">
+<label>صورة الإعلان من معرض الهاتف</label>
+<input id="aImageFile" type="file" accept="image/*" onchange="previewAuctionImage(this)">
+<input id="aImage" type="hidden">
+<div id="aImagePreview" style="display:none;margin-top:5px"><img id="aPreviewImg" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px"></div>
+<input id="aPrice" placeholder="السعر الحالي، مثال: 2,500,000 ريال">
+<input id="aBid" placeholder="أعلى مزايدة، مثال: 2,650,000 ريال">
+<label>وقت انتهاء المزاد</label>
+<input id="aEnd" type="datetime-local">
+<select id="aStatus"><option>نشط</option><option>قريباً</option><option>منتهي</option><option>مباع</option><option>متوقف</option></select>
+<textarea id="aDesc" placeholder="وصف الإعلان والمواصفات"></textarea>
+<button class="btn" onclick="addAuction()">➕ إنشاء الإعلان</button>
+</div>
+<h2>إعلانات الحراج والمزادات</h2><div class="admin-list" id="auctionAdminList"></div>
+</section>
+
+<section id="settingsTab" class="hidden">
+<h2>إعدادات التواصل</h2>
+<div class="form"><input id="wa" value="967771204253"><button class="btn" onclick="saveSettings()">حفظ رقم واتساب</button></div>
+<p class="muted">الرقم الافتراضي مضبوط على 967771204253.</p>
+</section>
+</div>
+</main>
+<footer>© 2026 YUNKO — جميع الحقوق محفوظة</footer>
+
+<script>
+const KEY='yunko_products_v1', SET='yunko_settings_v1';
+let products=JSON.parse(localStorage.getItem(KEY)||'null')||[
+{id:1,name:'سيارة للبيع',cat:'السيارات',price:'السعر عند التواصل',icon:'🚙',desc:'موديل حديث وحالة ممتازة. تواصل معنا لمعرفة التفاصيل.'},
+{id:2,name:'ملابس رجالية',cat:'الملابس',price:'السعر عند التواصل',icon:'👔',desc:'تشكيلة متنوعة ومقاسات متعددة.'},
+{id:3,name:'منتج متنوع',cat:'منتجات متنوعة',price:'السعر عند التواصل',icon:'📦',desc:'منتج أو خدمة من مختلف المجالات.'}
+];
+let settings=JSON.parse(localStorage.getItem(SET)||'null')||{wa:'967771204253'};
+
+function save(){localStorage.setItem(KEY,JSON.stringify(products))}
+function waLink(p){return 'https://wa.me/'+settings.wa+'?text='+encodeURIComponent('مرحباً، أريد الاستفسار عن: '+p.name)}
+
+const AKEY='yunko_auctions_v1';
+let auctions=JSON.parse(localStorage.getItem(AKEY)||'null')||[];
+function saveAuctions(){localStorage.setItem(AKEY,JSON.stringify(auctions))}
+
+function fileToDataURL(file){
+ return new Promise((resolve,reject)=>{
+   const r=new FileReader();
+   r.onload=()=>resolve(r.result);
+   r.onerror=reject;
+   r.readAsDataURL(file);
+ })
+}
+function previewAuctionImage(input){
+ const file=input.files&&input.files[0]; if(!file)return;
+ const r=new FileReader();r.onload=()=>{aImage.value=r.result;aPreviewImg.src=r.result;aImagePreview.style.display='block'};r.readAsDataURL(file);
+}
+function previewProductImage(input){
+ const file=input.files&&input.files[0]; if(!file)return;
+ const r=new FileReader();r.onload=()=>{pImage.value=r.result;pPreviewImg.src=r.result;pImagePreview.style.display='block'};r.readAsDataURL(file);
+}
+
+function addAuction(){
+ const title=aTitle.value.trim(); if(!title){alert('اكتب عنوان الإعلان أولاً');return}
+ auctions.unshift({id:Date.now(),title,image:aImage.value.trim(),price:aPrice.value.trim()||'السعر عند التواصل',bid:aBid.value.trim()||'لا توجد مزايدة بعد',end:aEnd.value,status:aStatus.value,desc:aDesc.value.trim()||'للاستفسار عن الإعلان تواصل معنا عبر واتساب.'});
+ saveAuctions();renderAuctions();renderAuctionAdmin();
+ aTitle.value='';aImage.value='';aImageFile.value='';aImagePreview.style.display='none';aPrice.value='';aBid.value='';aEnd.value='';aDesc.value='';alert('تم إنشاء إعلان المزاد');
+}
+function removeAuction(id){if(confirm('هل تريد حذف هذا الإعلان؟')){auctions=auctions.filter(a=>a.id!==id);saveAuctions();renderAuctions();renderAuctionAdmin()}}
+function editAuction(id){
+ const a=auctions.find(x=>x.id===id); if(!a)return;
+ const title=prompt('العنوان',a.title); if(title===null)return;
+ const image=prompt('الصورة الحالية محفوظة. لإزالة الصورة اكتب REMOVE، أو اتركها كما هي.',a.image?'[صورة محفوظة]':''); if(image===null)return;
+ const price=prompt('السعر الحالي',a.price); if(price===null)return;
+ const bid=prompt('أعلى مزايدة',a.bid); if(bid===null)return;
+ const end=prompt('وقت الانتهاء (YYYY-MM-DDTHH:MM)',a.end||''); if(end===null)return;
+ const status=prompt('الحالة: نشط / قريباً / منتهي / مباع / متوقف',a.status); if(status===null)return;
+ const desc=prompt('وصف الإعلان',a.desc||''); if(desc===null)return;
+ a.title=title.trim()||a.title;
+ a.image=image.trim().toUpperCase()==='REMOVE'?'':(image.trim()==='[صورة محفوظة]'?a.image:image.trim());
+ a.price=price.trim()||'السعر عند التواصل';
+ a.bid=bid.trim()||'لا توجد مزايدة بعد';
+ a.end=end.trim();
+ a.status=status.trim()||'نشط';
+ a.desc=desc.trim()||'للاستفسار عن الإعلان تواصل معنا عبر واتساب.';
+ saveAuctions();renderAuctions();renderAuctionAdmin();
+}
+function renderAuctions(){
+ const g=document.getElementById('auctionGrid'); if(!g)return; g.innerHTML='';
+ auctions.forEach(a=>{
+   const pic=a.image?`<img src="${esc(a.image)}" style="width:100%;height:190px;object-fit:cover" onerror="this.parentElement.innerHTML='🔨'">`:'🔨';
+   const end=a.end?new Date(a.end).toLocaleString('ar-YE'):'غير محدد';
+   g.innerHTML+=`<article class="card"><div class="pic">${pic}</div><div class="body">
+   <small class="muted">الحالة: ${esc(a.status)}</small><h3>${esc(a.title)}</h3><p class="muted">${esc(a.desc)}</p>
+   <div class="price">السعر الحالي: ${esc(a.price)}</div><p><b>أعلى مزايدة:</b> ${esc(a.bid)}</p><p class="muted">⏰ ينتهي: ${esc(end)}</p>
+   <a class="btn green" href="https://wa.me/${settings.wa}?text=${encodeURIComponent('مرحباً، أريد المزايدة على إعلان: '+a.title)}" target="_blank">💬 المزايدة عبر واتساب</a>
+   </div></article>`;
+ })
+ if(!auctions.length)g.innerHTML='<p class="muted">لا توجد إعلانات مزادات حاليًا.</p>';
+}
+function renderAuctionAdmin(){
+ const l=document.getElementById('auctionAdminList'); if(!l)return;l.innerHTML='';
+ auctions.forEach(a=>l.innerHTML+=`<div class="admin-item"><div><b>${esc(a.title)}</b><div class="muted">السعر: ${esc(a.price)} — أعلى مزايدة: ${esc(a.bid)} — الحالة: ${esc(a.status)}</div><div class="muted">الانتهاء: ${a.end?esc(new Date(a.end).toLocaleString('ar-YE')):'غير محدد'}</div></div><div class="actions"><button class="btn dark" onclick="editAuction(${a.id})">✏️ تعديل الإعلان</button><button class="btn danger" onclick="removeAuction(${a.id})">🗑️ حذف</button></div></div>`)
+}
+function showAuctions(){store.classList.add('hidden');admin.classList.add('hidden');auctions.classList.remove('hidden');renderAuctions();window.scrollTo(0,0)}
+
+function renderStore(){
+ const g=document.getElementById('storeGrid');g.innerHTML='';
+ products.forEach(p=>g.innerHTML+=`<article class="card"><div class="pic">${p.icon||'📦'}</div><div class="body"><small class="muted">${p.cat}</small><h3>${esc(p.name)}</h3><p class="muted">${esc(p.desc)}</p><div class="price">${esc(p.price)}</div><a class="btn green" href="${waLink(p)}" target="_blank">طلب عبر واتساب</a></div></article>`)
+}
+function renderAdmin(){
+ const l=document.getElementById('adminList');l.innerHTML='';
+ products.forEach(p=>l.innerHTML+=`<div class="admin-item"><div><b>${esc(p.name)}</b><div class="muted">${esc(p.cat)} — ${esc(p.price)}</div></div><div class="actions"><button class="btn danger" onclick="removeProduct(${p.id})">حذف</button></div></div>`)
+}
+function addProduct(){
+ const name=pName.value.trim(); if(!name){alert('اكتب اسم المنتج أولاً');return}
+ products.unshift({id:Date.now(),name,cat:pCat.value,price:pPrice.value.trim()||'السعر عند التواصل',icon:pIcon.value.trim()||'📦',image:pImage.value||'',desc:pDesc.value.trim()||'للاستفسار عن المنتج تواصل معنا عبر واتساب.'});
+ save();renderStore();renderAuctions();renderAuctionAdmin();renderAdmin();pName.value='';pPrice.value='';pIcon.value='';pDesc.value='';pImage.value='';pImageFile.value='';pImagePreview.style.display='none';alert('تمت إضافة المنتج');
+}
+function removeProduct(id){if(confirm('هل تريد حذف هذا المنتج؟')){products=products.filter(p=>p.id!==id);save();renderStore();renderAdmin()}}
+function saveSettings(){settings.wa=wa.value.replace(/\D/g,'');localStorage.setItem(SET,JSON.stringify(settings));renderStore();alert('تم حفظ رقم واتساب')}
+function showStore(){store.classList.remove('hidden');admin.classList.add('hidden');auctions.classList.add('hidden');window.scrollTo(0,0)}
+function showAdmin(){admin.classList.remove('hidden');store.classList.add('hidden');auctions.classList.add('hidden');renderAdmin();renderAuctionAdmin();window.scrollTo(0,0)}
+function adminTab(tab,btn){
+ productsTab.classList.toggle('hidden',tab!=='products');auctionsTab.classList.toggle('hidden',tab!=='auctions');settingsTab.classList.toggle('hidden',tab!=='settings');
+ document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active')
+}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+renderStore();
+</script>
+</body></html>
